@@ -257,6 +257,11 @@
   <ItemGroup>
     <None Include=".gitignore" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Keyboard\Keyboard.vcxproj">
+      <Project>{242eaff0-45d2-46e0-9686-faff435b829e}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include <src/styles.h>
+#include "lib/styles.h"
 
 namespace Calculator
 {
@@ -11,40 +11,38 @@ namespace Calculator
     using namespace System::Data;
     using namespace System::Drawing;
 
-    enum class Key {
-        ZERO = '0',
-        ONE = '1',
-        TWO = '2',
-        THREE = '3',
-        FOUR = '4',
-        FIVE = '5',
-        SIX = '6',
-        SIGN = '_',
-        MINUS = '0',
-        PLUS = '+',
-        MULTIPLY = '*',
-        DIVIDE = '/',
-        CLEAR = 'c',
-        COMPUTE = '=',
-        PAREN = '(',
-        POINT = ',',
-    };
-
-  public
-    ref class KeyPressedEventArgs : public EventArgs
-    {
-      public:
-        const Key key;
-
-        KeyPressedEventArgs(const Key key) : key(key)
-        {
-        }
-    };
-
   public
     ref class Keyboard : public System::Windows::Forms::UserControl
     {
+      public: /*
+         enum class Key {
+             ZERO = '0',
+             ONE = '1',
+             TWO = '2',
+             THREE = '3',
+             FOUR = '4',
+             FIVE = '5',
+             SIX = '6',
+             SIGN = '_',
+             MINUS = '0',
+             PLUS = '+',
+             MULTIPLY = '*',
+             DIVIDE = '/',
+             CLEAR = 'c',
+             COMPUTE = '=',
+             PAREN = '(',
+             POINT = ',',
+         };
 
+         ref class KeyPressedEventArgs : public EventArgs
+         {
+           public:
+             const Key key;
+
+             KeyPressedEventArgs(const Key key) : key(key)
+             {
+             }
+         };*/
       public:
         Keyboard(void)
         {
@@ -160,24 +158,214 @@ namespace Calculator
             this->tableLayoutPanel2->Size = System::Drawing::Size(630, 559);
             this->tableLayoutPanel2->TabIndex = 2;
 
-            InitializeButton<Key::PLUS>(this->button_plus, L"button_plus", L"+", 0);
-            InitializeButton<Key::MINUS>(this->button_minus, L"button_minus", L"-", 1);
-            InitializeButton<Key::MULTIPLY>(this->button_multiply, L"button_multiply", L"×", 2);
-            InitializeButton<Key::DIVIDE>(this->button_divide, L"button_divide", L"÷", 3);
+            this->button_plus->Dock = System::Windows::Forms::DockStyle::Fill;
+            this->button_plus->Font = gcnew System::Drawing::Font(
+                L"Courier New",
+                32,
+                System::Drawing::FontStyle::Regular,
+                System::Drawing::GraphicsUnit::Point,
+                static_cast<System::Byte>(204)
+            );
+            this->button_plus->Name = L"button_plus";
+            this->button_plus->TabIndex = 0;
+            this->button_plus->Text = L"+";
+            this->button_plus->UseVisualStyleBackColor = true;
 
-            InitializeButton<Key::ZERO>(this->button_0, L"button_zero", L"0", 13);
-            InitializeButton<Key::ONE>(this->button_1, L"button_one", L"1", 4);
-            InitializeButton<Key::TWO>(this->button_2, L"button_two", L"2", 5);
-            InitializeButton<Key::THREE>(this->button_3, L"button_three", L"3", 6);
-            InitializeButton<Key::FOUR>(this->button_4, L"button_four", L"4", 8);
-            InitializeButton<Key::FIVE>(this->button_5, L"button_five", L"5", 9);
-            InitializeButton<Key::SIX>(this->button_6, L"button_six", L"6", 10);
+            this->button_minus->Dock = System::Windows::Forms::DockStyle::Fill;
+            this->button_minus->Font = gcnew System::Drawing::Font(
+                L"Courier New",
+                32,
+                System::Drawing::FontStyle::Regular,
+                System::Drawing::GraphicsUnit::Point,
+                static_cast<System::Byte>(204)
+            );
+            this->button_minus->Name = L"button_minus";
+            this->button_minus->TabIndex = 1;
+            this->button_minus->Text = L"-";
+            this->button_minus->UseVisualStyleBackColor = true;
 
-            InitializeButton<Key::SIGN>(this->button_sign, L"button_sign", L"+/-", 12);
-            InitializeButton<Key::PAREN>(this->button_paren, L"button_paren", L"()", 7);
-            InitializeButton<Key::CLEAR>(this->button_clear, L"button_clear", L"C", 11);
-            InitializeButton<Key::POINT>(this->button_point, L"button_point", L",", 14);
-            InitializeButton<Key::COMPUTE>(this->button_compute, L"button_compute", L"=", 15);
+            this->button_multiply->Dock = System::Windows::Forms::DockStyle::Fill;
+            this->button_multiply->Font = gcnew System::Drawing::Font(
+                L"Courier New",
+                32,
+                System::Drawing::FontStyle::Regular,
+                System::Drawing::GraphicsUnit::Point,
+                static_cast<System::Byte>(204)
+            );
+            this->button_multiply->Name = L"button_multiply";
+            this->button_multiply->TabIndex = 2;
+            this->button_multiply->Text = L"×";
+            this->button_multiply->UseVisualStyleBackColor = true;
+
+            this->button_divide->Dock = System::Windows::Forms::DockStyle::Fill;
+            this->button_divide->Font = gcnew System::Drawing::Font(
+                L"Courier New",
+                32,
+                System::Drawing::FontStyle::Regular,
+                System::Drawing::GraphicsUnit::Point,
+                static_cast<System::Byte>(204)
+            );
+            this->button_divide->Name = L"button_divide";
+            this->button_divide->TabIndex = 3;
+            this->button_divide->Text = L"÷";
+            this->button_divide->UseVisualStyleBackColor = true;
+
+            this->button_0->Dock = System::Windows::Forms::DockStyle::Fill;
+            this->button_0->Font = gcnew System::Drawing::Font(
+                L"Courier New",
+                32,
+                System::Drawing::FontStyle::Regular,
+                System::Drawing::GraphicsUnit::Point,
+                static_cast<System::Byte>(204)
+            );
+            this->button_0->Name = L"button_zero";
+            this->button_0->TabIndex = 13;
+            this->button_0->Text = L"0";
+            this->button_0->UseVisualStyleBackColor = true;
+
+            this->button_1->Dock = System::Windows::Forms::DockStyle::Fill;
+            this->button_1->Font = gcnew System::Drawing::Font(
+                L"Courier New",
+                32,
+                System::Drawing::FontStyle::Regular,
+                System::Drawing::GraphicsUnit::Point,
+                static_cast<System::Byte>(204)
+            );
+            this->button_1->Name = L"button_one";
+            this->button_1->TabIndex = 4;
+            this->button_1->Text = L"1";
+            this->button_1->UseVisualStyleBackColor = true;
+
+            this->button_2->Dock = System::Windows::Forms::DockStyle::Fill;
+            this->button_2->Font = gcnew System::Drawing::Font(
+                L"Courier New",
+                32,
+                System::Drawing::FontStyle::Regular,
+                System::Drawing::GraphicsUnit::Point,
+                static_cast<System::Byte>(204)
+            );
+            this->button_2->Name = L"button_two";
+            this->button_2->TabIndex = 5;
+            this->button_2->Text = L"2";
+            this->button_2->UseVisualStyleBackColor = true;
+
+            this->button_3->Dock = System::Windows::Forms::DockStyle::Fill;
+            this->button_3->Font = gcnew System::Drawing::Font(
+                L"Courier New",
+                32,
+                System::Drawing::FontStyle::Regular,
+                System::Drawing::GraphicsUnit::Point,
+                static_cast<System::Byte>(204)
+            );
+            this->button_3->Name = L"button_three";
+            this->button_3->TabIndex = 6;
+            this->button_3->Text = L"3";
+            this->button_3->UseVisualStyleBackColor = true;
+
+            this->button_4->Dock = System::Windows::Forms::DockStyle::Fill;
+            this->button_4->Font = gcnew System::Drawing::Font(
+                L"Courier New",
+                32,
+                System::Drawing::FontStyle::Regular,
+                System::Drawing::GraphicsUnit::Point,
+                static_cast<System::Byte>(204)
+            );
+            this->button_4->Name = L"button_four";
+            this->button_4->TabIndex = 8;
+            this->button_4->Text = L"4";
+            this->button_4->UseVisualStyleBackColor = true;
+
+            this->button_5->Dock = System::Windows::Forms::DockStyle::Fill;
+            this->button_5->Font = gcnew System::Drawing::Font(
+                L"Courier New",
+                32,
+                System::Drawing::FontStyle::Regular,
+                System::Drawing::GraphicsUnit::Point,
+                static_cast<System::Byte>(204)
+            );
+            this->button_5->Name = L"button_five";
+            this->button_5->TabIndex = 9;
+            this->button_5->Text = L"5";
+            this->button_5->UseVisualStyleBackColor = true;
+
+            this->button_6->Dock = System::Windows::Forms::DockStyle::Fill;
+            this->button_6->Font = gcnew System::Drawing::Font(
+                L"Courier New",
+                32,
+                System::Drawing::FontStyle::Regular,
+                System::Drawing::GraphicsUnit::Point,
+                static_cast<System::Byte>(204)
+            );
+            this->button_6->Name = L"button_six";
+            this->button_6->TabIndex = 10;
+            this->button_6->Text = L"6";
+            this->button_6->UseVisualStyleBackColor = true;
+
+            this->button_sign->Dock = System::Windows::Forms::DockStyle::Fill;
+            this->button_sign->Font = gcnew System::Drawing::Font(
+                L"Courier New",
+                32,
+                System::Drawing::FontStyle::Regular,
+                System::Drawing::GraphicsUnit::Point,
+                static_cast<System::Byte>(204)
+            );
+            this->button_sign->Name = L"button_sign";
+            this->button_sign->TabIndex = 12;
+            this->button_sign->Text = L"+/-";
+            this->button_sign->UseVisualStyleBackColor = true;
+
+            this->button_paren->Dock = System::Windows::Forms::DockStyle::Fill;
+            this->button_paren->Font = gcnew System::Drawing::Font(
+                L"Courier New",
+                32,
+                System::Drawing::FontStyle::Regular,
+                System::Drawing::GraphicsUnit::Point,
+                static_cast<System::Byte>(204)
+            );
+            this->button_paren->Name = L"button_paren";
+            this->button_paren->TabIndex = 7;
+            this->button_paren->Text = L"()";
+            this->button_paren->UseVisualStyleBackColor = true;
+
+            this->button_clear->Dock = System::Windows::Forms::DockStyle::Fill;
+            this->button_clear->Font = gcnew System::Drawing::Font(
+                L"Courier New",
+                32,
+                System::Drawing::FontStyle::Regular,
+                System::Drawing::GraphicsUnit::Point,
+                static_cast<System::Byte>(204)
+            );
+            this->button_clear->Name = L"button_clear";
+            this->button_clear->TabIndex = 11;
+            this->button_clear->Text = L"C";
+            this->button_clear->UseVisualStyleBackColor = true;
+
+            this->button_point->Dock = System::Windows::Forms::DockStyle::Fill;
+            this->button_point->Font = gcnew System::Drawing::Font(
+                L"Courier New",
+                32,
+                System::Drawing::FontStyle::Regular,
+                System::Drawing::GraphicsUnit::Point,
+                static_cast<System::Byte>(204)
+            );
+            this->button_point->Name = L"button_point";
+            this->button_point->TabIndex = 14;
+            this->button_point->Text = L",";
+            this->button_point->UseVisualStyleBackColor = true;
+
+            this->button_compute->Dock = System::Windows::Forms::DockStyle::Fill;
+            this->button_compute->Font = gcnew System::Drawing::Font(
+                L"Courier New",
+                32,
+                System::Drawing::FontStyle::Regular,
+                System::Drawing::GraphicsUnit::Point,
+                static_cast<System::Byte>(204)
+            );
+            this->button_compute->Name = L"button_compute";
+            this->button_compute->TabIndex = 15;
+            this->button_compute->Text = L"=";
+            this->button_compute->UseVisualStyleBackColor = true;
+
             //
             // Keyboard
             //
@@ -191,25 +379,13 @@ namespace Calculator
         }
 #pragma endregion
 
-        template <Key K>
-        void InitializeButton(System::Windows::Forms::Button ^ button, System::String ^ name, System::String ^ text, int tabIndex)
-        {
-            button->Dock = System::Windows::Forms::DockStyle::Fill;
-            button->Font = Styles::getDefaultFont();
-            button->Name = name;
-            button->TabIndex = tabIndex;
-            button->Text = text;
-            button->UseVisualStyleBackColor = true;
-            button->Click += gcnew System::EventHandler(this, &Keyboard::button_Click<K>);
-        }
-
       public:
-        System::EventHandler<KeyPressedEventArgs ^> ^ KeyPressed;
+        // System::EventHandler<KeyPressedEventArgs ^> ^ KeyPressed;
 
       private:
-        template <Key K> System::Void button_Click(System::Object ^, System::EventArgs ^)
+        /*template <Key K> System::Void button_Click(System::Object ^, System::EventArgs ^)
         {
             KeyPressed(this, gcnew KeyPressedEventArgs(K));
-        }
+        }*/
     };
 } // namespace Calculator

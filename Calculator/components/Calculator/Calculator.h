@@ -1,7 +1,6 @@
 ﻿
 #pragma once
 
-#include <components/Keyboard/Keyboard.h>
 #include <src/styles.h>
 #include <iostream>
 
@@ -35,7 +34,6 @@ namespace Calculator
       private:
         System::Windows::Forms::TableLayoutPanel ^ tableLayoutPanel1;
         System::Windows::Forms::TextBox ^ textBox1;
-        Keyboard ^ keyboard;
 
         System::ComponentModel::Container ^ components;
 
@@ -44,7 +42,6 @@ namespace Calculator
         {
             this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
             this->textBox1 = (gcnew System::Windows::Forms::TextBox());
-            this->keyboard = (gcnew Keyboard());
             this->tableLayoutPanel1->SuspendLayout();
             this->SuspendLayout();
             //
@@ -55,7 +52,6 @@ namespace Calculator
                 (gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 50))
             );
             this->tableLayoutPanel1->Controls->Add(this->textBox1, 0, 0);
-            this->tableLayoutPanel1->Controls->Add(this->keyboard, 0, 1);
             this->tableLayoutPanel1->Dock = System::Windows::Forms::DockStyle::Fill;
             this->tableLayoutPanel1->Location = System::Drawing::Point(16, 16);
             this->tableLayoutPanel1->Name = L"tableLayoutPanel1";
@@ -74,22 +70,11 @@ namespace Calculator
             this->textBox1->Dock = System::Windows::Forms::DockStyle::Fill;
             this->textBox1->Location = System::Drawing::Point(0, 0);
             this->textBox1->Margin = System::Windows::Forms::Padding(0, 0, 0, 16);
-            this->textBox1->Font = Styles::getDefaultFont();;
             this->textBox1->Multiline = true;
             this->textBox1->Name = L"textBox1";
             this->textBox1->ReadOnly = true;
             this->textBox1->Size = System::Drawing::Size(488, 126);
             this->textBox1->TabIndex = 0;
-            //
-            // button1
-            //
-            this->keyboard->Dock = System::Windows::Forms::DockStyle::Fill;
-            this->keyboard->Location = System::Drawing::Point(3, 145);
-            this->keyboard->Name = L"keyboard1";
-            this->keyboard->Size = System::Drawing::Size(482, 420);
-            this->keyboard->TabIndex = 1;
-            this->keyboard->KeyPressed +=
-                gcnew System::EventHandler<KeyPressedEventArgs ^>(this, &Calculator::Keyboard_onKeyPressed);
             //
             // Calculator
             //
@@ -107,11 +92,6 @@ namespace Calculator
         }
 #pragma endregion
       private:
-        System::Void Keyboard_onKeyPressed(System::Object ^ sender, KeyPressedEventArgs ^ e)
-        {
-            this->textBox1->Text = gcnew System::String(static_cast<char>(e->key), 1);
-        }
-
         System::Void Form1_Load(System::Object ^ sender, System::EventArgs ^ e)
         {
         }
