@@ -1,7 +1,8 @@
 ﻿
 #pragma once
 
-#include <iostream>
+#include <string>
+#include <lib\computations.h>
 
 namespace Calculator
 {
@@ -44,7 +45,7 @@ namespace Calculator
         {
             this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
             this->textBox1 = (gcnew System::Windows::Forms::TextBox());
-            this->keyboard1 = (gcnew ::Calculator::Keyboard());
+            this->keyboard1 = (gcnew Keyboard());
             this->tableLayoutPanel1->SuspendLayout();
             this->SuspendLayout();
             //
@@ -89,8 +90,7 @@ namespace Calculator
             this->keyboard1->Name = L"keyboard1";
             this->keyboard1->Size = System::Drawing::Size(482, 420);
             this->keyboard1->TabIndex = 1;
-            this->keyboard1->KeyPressed +=
-                gcnew System::EventHandler<Keyboard::KeyPressedEventArgs ^>(this, &Calculator::Keyboard_KeyPress);
+            this->keyboard1->Load += gcnew System::EventHandler(this, &Calculator::keyboard1_Load);
             //
             // Calculator
             //
@@ -108,8 +108,24 @@ namespace Calculator
         }
 #pragma endregion
       private:
+        static std::wstring toStdString(System::String ^ str)
+        {
+            std::wstring result = L"";
+            auto e = str->GetEnumerator();
+            while (e->MoveNext()) {
+                result += e->Current;
+            }
+            return result;
+        }
+
         System::Void Form1_Load(System::Object ^ sender, System::EventArgs ^ e)
         {
+            long double out;
+            if (compute(Calculator::toStdString(L"5+2×-2"), 10, out)) {
+                this->textBox1->Text = L"Error";
+            } else {
+                this->textBox1->Text = out.ToString();
+            }
         }
 
         System::Void tableLayoutPanel1_Paint(System::Object ^ sender, System::Windows::Forms::PaintEventArgs ^ e)
@@ -131,6 +147,11 @@ namespace Calculator
                 value += gcnew System::String(static_cast<char>(e->key), 1);
             }
             this->textBox1->Text = value;
+        }
+
+      private:
+        System::Void keyboard1_Load(System::Object ^ sender, System::EventArgs ^ e)
+        {
         }
     };
 } // namespace Calculator

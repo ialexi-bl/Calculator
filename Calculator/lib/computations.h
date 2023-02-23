@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 #include <vector>
 #include <string>
 
@@ -8,52 +7,63 @@ namespace Calculator
 {
     namespace Tokenizer
     {
-        struct NumberToken {
-            bool hasPoint = false;
-            std::string whole = "";
-            std::string decimal = "";
+        class NumberToken
+        {
+          public:
+            std::vector<char> whole;
+            std::vector<char> decimal;
         };
 
-        struct Token {
+        class Token
+        {
+          public:
             enum class Type {
                 OPERATION = 0,
                 NUMBER = 1,
-                PARENTHESIS = 2,
+                OPEN_PARENTHESIS = 2,
+                CLOSE_PARENTHESIS = 3,
             };
 
             Type type;
             union {
                 char operation;
-                char parenthesis;
-                NumberToken number;
+                NumberToken* number;
             };
 
             Token();
             ~Token();
+
+            static Token Number(std::vector<char> whole, std::vector<char> decimal);
         };
 
-        int tokenize(System::String ^ str, int base, std::vector<Token> &result);
+        int tokenize(const std::wstring &str, std::vector<Token> &result);
     } // namespace Tokenizer
+
     namespace Parser
     {
-        struct BinaryOperation {
+        namespace BinaryOperation
+        {
             enum class Type;
-            struct Node;
+            class Nodeb;
 
             static int getPriority(Type);
-        };
-        struct UnaryOperation {
+        }; // namespace BinaryOperation
+        namespace UnaryOperation
+        {
             enum class Type;
-            struct Node;
+            class Nodeu;
+        }; // namespace UnaryOperation
+        namespace Literal
+        {
+            class Nodel;
         };
-        struct Literal {
-            struct Node;
-        };
-        struct Parentheses {
-            struct Node;
+        namespace Parentheses
+        {
+            class Nodep;
         };
 
-        struct Node {
+        class Node
+        {
             enum class Type {
                 BINARY_OPERATION = 0,
                 UNARY_OPERATION = 1,
@@ -66,13 +76,14 @@ namespace Calculator
 
           private:
             union {
-                BinaryOperation::Node *binaryOperation;
-                UnaryOperation::Node *unaryOperation;
-                Literal::Node *literal;
-                Parentheses::Node *parentheses;
+                ::Calculator::Parser::BinaryOperation::Nodeb *binaryOperation;
+                ::Calculator::Parser::UnaryOperation::Nodeu *unaryOperation;
+                ::Calculator::Parser::Literal::Nodel *literal;
+                ::Calculator::Parser::Parentheses::Nodep *parentheses;
             };
 
           private:
+            Node();
             Node(Type);
             void *&getPointer();
 
@@ -89,7 +100,7 @@ namespace Calculator
 
             long double evaluate() const noexcept;
 
-            friend int parseExpression(int &i, const std::vector<Tokenizer::Token> &tokens, int base, Node &result);
+            friend int parseExpression(size_t &i, const std::vector<Tokenizer::Token> &tokens, int base, Node &result);
         };
 
         enum class BinaryOperation::Type {
@@ -98,9 +109,12 @@ namespace Calculator
             MULTIPLY = 2,
             DIVIDE = 3,
         };
-        struct BinaryOperation::Node {
+        class BinaryOperation::Nodeb
+        {
+          public:
             Type type;
-            Parser::Node left, right;
+            ::Calculator::Parser::Node left;
+            ::Calculator::Parser::Node right;
 
             long double evaluate() const noexcept;
         };
@@ -108,27 +122,33 @@ namespace Calculator
         enum class UnaryOperation::Type {
             MINUS = 0,
         };
-        struct UnaryOperation::Node {
+        class UnaryOperation::Nodeu
+        {
+          public:
             Type type;
-            Parser::Node operand;
+            ::Calculator::Parser::Node operand;
 
             long double evaluate() const noexcept;
         };
 
-        struct Parentheses::Node {
-            Parser::Node expression;
+        class Parentheses::Nodep
+        {
+          public:
+            ::Calculator::Parser::Node expression;
 
             long double evaluate() const noexcept;
         };
 
-        struct Literal::Node {
+        class Literal::Nodel
+        {
+          public:
             long double value;
 
             long double evaluate() const noexcept;
         };
 
-        int parse(System::String ^ str, int base, Node &result);
+        int parse(const std::wstring &str, int base, Node &result);
     } // namespace Parser
 
-    long double compute(System::String ^);
+    int compute(const std::wstring &str, int base, long double &out);
 } // namespace Calculator

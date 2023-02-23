@@ -32,9 +32,6 @@
     <ClInclude Include="components\Test\MyForm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\computations.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="lib\computations.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -53,15 +50,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="components\Test\MyForm.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\styles.h">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\styles.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\computations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="lib\computations.cpp">
