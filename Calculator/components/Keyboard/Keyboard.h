@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include <src/styles.h>
+
 namespace Calculator
 {
     using namespace System;
@@ -39,9 +41,6 @@ namespace Calculator
         }
     };
 
-    /// <summary>
-    /// Summary for Keyboard
-    /// </summary>
   public
     ref class Keyboard : public System::Windows::Forms::UserControl
     {
@@ -50,15 +49,9 @@ namespace Calculator
         Keyboard(void)
         {
             InitializeComponent();
-            //
-            // TODO: Add the constructor code here
-            //
         }
 
       protected:
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
         ~Keyboard()
         {
             if (components) {
@@ -88,18 +81,9 @@ namespace Calculator
         System::Windows::Forms::Button ^ button_sign;
         System::Windows::Forms::Button ^ button_0;
 
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         System::ComponentModel::Container ^ components;
 
-
-
 #pragma region Windows Form Designer generated code
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         void InitializeComponent(void)
         {
             this->tableLayoutPanel2 = (gcnew System::Windows::Forms::TableLayoutPanel());
@@ -175,7 +159,7 @@ namespace Calculator
             );
             this->tableLayoutPanel2->Size = System::Drawing::Size(630, 559);
             this->tableLayoutPanel2->TabIndex = 2;
-            
+
             InitializeButton<Key::PLUS>(this->button_plus, L"button_plus", L"+", 0);
             InitializeButton<Key::MINUS>(this->button_minus, L"button_minus", L"-", 1);
             InitializeButton<Key::MULTIPLY>(this->button_multiply, L"button_multiply", L"×", 2);
@@ -207,17 +191,11 @@ namespace Calculator
         }
 #pragma endregion
 
-        template<Key K>
-        void InitializeButton(System::Windows::Forms::Button ^button, System::String ^ name, System::String ^ text, int tabIndex)
+        template <Key K>
+        void InitializeButton(System::Windows::Forms::Button ^ button, System::String ^ name, System::String ^ text, int tabIndex)
         {
             button->Dock = System::Windows::Forms::DockStyle::Fill;
-            button->Font = (gcnew System::Drawing::Font(
-                L"Courier New",
-                32,
-                System::Drawing::FontStyle::Regular,
-                System::Drawing::GraphicsUnit::Point,
-                static_cast<System::Byte>(204)
-            ));
+            button->Font = Styles::getDefaultFont();
             button->Name = name;
             button->TabIndex = tabIndex;
             button->Text = text;
@@ -229,9 +207,7 @@ namespace Calculator
         System::EventHandler<KeyPressedEventArgs ^> ^ KeyPressed;
 
       private:
-
-        template<Key K>
-        System::Void button_Click(System::Object ^, System::EventArgs ^)
+        template <Key K> System::Void button_Click(System::Object ^, System::EventArgs ^)
         {
             KeyPressed(this, gcnew KeyPressedEventArgs(K));
         }

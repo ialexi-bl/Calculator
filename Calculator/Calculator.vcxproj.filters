@@ -35,6 +35,9 @@
     <ClInclude Include="components\Test\MyForm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\computations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CppCLR_WinFormsProject.cpp">
@@ -55,6 +58,15 @@
     <ClCompile Include="components\Test\MyForm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\styles.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\styles.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\computations.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico">
@@ -65,5 +77,8 @@
     <EmbeddedResource Include="components\Calculator\Calculator.resx">
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitignore" />
   </ItemGroup>
 </Project>

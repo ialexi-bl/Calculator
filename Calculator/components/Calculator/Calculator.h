@@ -1,7 +1,8 @@
 ﻿
 #pragma once
 
-#include "../Keyboard/Keyboard.h"
+#include <components/Keyboard/Keyboard.h>
+#include <src/styles.h>
 #include <iostream>
 
 namespace Calculator
@@ -13,9 +14,6 @@ namespace Calculator
     using namespace System::Data;
     using namespace System::Drawing;
 
-    /// <summary>
-    /// Summary for Form1
-    /// </summary>
   public
     ref class Calculator : public System::Windows::Forms::Form
     {
@@ -23,15 +21,9 @@ namespace Calculator
         Calculator(void)
         {
             InitializeComponent();
-            //
-            // TODO: Add the constructor code here
-            //
         }
 
       protected:
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
         ~Calculator()
         {
             if (components) {
@@ -44,16 +36,9 @@ namespace Calculator
         System::Windows::Forms::TextBox ^ textBox1;
         Keyboard ^ keyboard;
 
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         System::ComponentModel::Container ^ components;
 
 #pragma region Windows Form Designer generated code
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         void InitializeComponent(void)
         {
             this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
@@ -88,6 +73,7 @@ namespace Calculator
             this->textBox1->Dock = System::Windows::Forms::DockStyle::Fill;
             this->textBox1->Location = System::Drawing::Point(0, 0);
             this->textBox1->Margin = System::Windows::Forms::Padding(0, 0, 0, 16);
+            this->textBox1->Font = Styles::getDefaultFont();;
             this->textBox1->Multiline = true;
             this->textBox1->Name = L"textBox1";
             this->textBox1->ReadOnly = true;
