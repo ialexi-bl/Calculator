@@ -18,13 +18,7 @@
     <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Keyboard.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Calculator\src\styles.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="lib\styles.h">
@@ -35,13 +29,7 @@
     <ClCompile Include="AssemblyInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Keyboard.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Calculator\src\styles.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="lib\styles.cpp">

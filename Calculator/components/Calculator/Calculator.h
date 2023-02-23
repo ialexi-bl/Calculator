@@ -89,7 +89,8 @@ namespace Calculator
             this->keyboard1->Name = L"keyboard1";
             this->keyboard1->Size = System::Drawing::Size(482, 420);
             this->keyboard1->TabIndex = 1;
-            this->keyboard1->KeyPressed += gcnew System::EventHandler<Keyboard::KeyPressedEventArgs ^>(this, &Calculator::Keyboard_KeyPress);
+            this->keyboard1->KeyPressed +=
+                gcnew System::EventHandler<Keyboard::KeyPressedEventArgs ^>(this, &Calculator::Keyboard_KeyPress);
             //
             // Calculator
             //
@@ -119,8 +120,17 @@ namespace Calculator
         {
         }
 
-        System::Void Keyboard_KeyPress(System::Object ^, Keyboard::KeyPressedEventArgs ^ e) 
+      private:
+        System::String ^ value = L"";
+
+        System::Void Keyboard_KeyPress(System::Object ^, Keyboard::KeyPressedEventArgs ^ e)
         {
+            if (e->key == Keyboard::Key::CLEAR) {
+                value = value->Substring(0, value->Length - 1);
+            } else {
+                value += gcnew System::String(static_cast<char>(e->key), 1);
+            }
+            this->textBox1->Text = value;
         }
     };
 } // namespace Calculator

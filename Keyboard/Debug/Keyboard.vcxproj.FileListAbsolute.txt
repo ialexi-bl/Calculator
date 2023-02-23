@@ -1,3 +1,0 @@
-H:\home\projects\project\Calculator\Keyboard\Debug\Keyboard.vcxproj.AssemblyReference.cache
-H:\home\projects\project\Calculator\Keyboard\Debug\Keyboard.Keyboard.resources
-H:\home\projects\project\Calculator\Keyboard\Debug\Keyboard.vcxproj.GenerateResource.cache
