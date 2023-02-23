@@ -1,55 +1,64 @@
 #include <pch.h>
+#include <utility>
 #include "computations.h"
 
 namespace Calculator
 {
+    Node::Node(NodeType type) : type {type} {};
+    Node::~Node()
+    {
+        switch (type) {
+        case NodeType::BINARY_OPERATION:
+            delete binaryOperation;
+            break;
+        case NodeType::UNARY_OPERATION:
+            delete unaryOperation;
+            break;
+        case NodeType::LITERAL:
+            delete literal;
+            break;
+        case NodeType::PARENTHESES:
+            delete parentheses;
+            break;
+        }
+    }
+
     Node Node::Binary(BinaryOperation type, Node left, Node right) noexcept
     {
-        return {
-            .type {NodeType::BINARY_OPERATION},
-            .binaryOperation {
-                .type {type},
-                .left {left},
-                .right {right},
-            },
-        };
+        Node node(NodeType::BINARY_OPERATION);
+        node.binaryOperation = new BinaryOperationInfo {type, left, right};
+        return std::move(node);
     }
     Node Node::Unary(UnaryOperation type, Node operand) noexcept
     {
-        return {
-            .type {NodeType::UNARY_OPERATION},
-            .unaryOperation {
-                .type {type},
-                .operand {operand},
-            },
-        };
+        Node node(NodeType::UNARY_OPERATION);
+        node.unaryOperation = new UnaryOperationInfo {type, operand};
+        return node;
     }
     Node Node::Parentheses(Node expression) noexcept
     {
-        return {
-            .type {NodeType::PARENTHESES},
-            .parentheses {expression},
-        };
+        Node node(NodeType::PARENTHESES);
+        node.parentheses = new ParenthesesInfo {expression};
+        return node;
     }
     Node Node::Literal(long double value) noexcept
     {
-        return {
-            .type {NodeType::LITERAL},
-            .literal {value},
-        };
+        Node node(NodeType::LITERAL);
+        node.literal = new LiteralInfo {value};
+        return node;
     }
 
     long double Node::evaluate() const noexcept
     {
         switch (type) {
         case NodeType::LITERAL:
-            return literal.evaluate();
+            return literal->evaluate();
         case NodeType::UNARY_OPERATION:
-            return unaryOperation.evaluate();
+            return unaryOperation->evaluate();
         case NodeType::BINARY_OPERATION:
-            return binaryOperation.evaluate();
+            return binaryOperation->evaluate();
         case NodeType::PARENTHESES:
-            return parentheses.evaluate();
+            return parentheses->evaluate();
         }
         return 0;
     }
@@ -57,6 +66,11 @@ namespace Calculator
     long double LiteralInfo::evaluate() const noexcept
     {
         return value;
+    }
+
+    long double ParenthesesInfo::evaluate() const noexcept
+    {
+        return expression.evaluate();
     }
 
     long double UnaryOperationInfo::evaluate() const noexcept
@@ -97,5 +111,6 @@ namespace Calculator
         while (enumerator->MoveNext()) {
             wchar_t c = enumerator->Current;
         }
+        return Node::Literal(1);
     }
 } // namespace Calculator

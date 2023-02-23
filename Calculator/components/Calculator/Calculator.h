@@ -13,6 +13,7 @@ namespace Calculator
     using namespace System::Windows::Forms;
     using namespace System::Data;
     using namespace System::Drawing;
+    using namespace Calculator;
 
   public
     ref class Calculator : public System::Windows::Forms::Form

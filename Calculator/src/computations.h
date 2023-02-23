@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 namespace Calculator
 {
     enum class NodeType {
@@ -18,15 +20,28 @@ namespace Calculator
         MINUS = 0,
     };
 
+    struct BinaryOperationInfo;
+    struct UnaryOperationInfo;
+    struct LiteralInfo;
+    struct ParenthesesInfo;
+
     struct Node {
+      public:
         const NodeType type;
 
+      private:
         union {
-            BinaryOperationInfo binaryOperation;
-            UnaryOperationInfo unaryOperation;
-            LiteralInfo literal;
-            ParenthesesInfo parentheses;
+            BinaryOperationInfo *binaryOperation;
+            UnaryOperationInfo *unaryOperation;
+            LiteralInfo *literal;
+            ParenthesesInfo *parentheses;
         };
+
+      private:
+        Node(NodeType type);
+
+      public:
+        ~Node();
 
         static Node Binary(BinaryOperation type, Node left, Node right) noexcept;
         static Node Unary(UnaryOperation type, Node operand) noexcept;
