@@ -29,9 +29,6 @@
     <ClInclude Include="components\Calculator\Calculator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="components\Keyboard\Keyboard.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="components\Test\MyForm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -50,9 +47,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="components\Calculator\Calculator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="components\Keyboard\Keyboard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="components\Test\MyForm.cpp">

@@ -207,9 +207,6 @@
     <ClInclude Include="components\Calculator\Calculator.h">
       <FileType>CppForm</FileType>
     </ClInclude>
-    <ClInclude Include="components\Keyboard\Keyboard.h">
-      <FileType>CppControl</FileType>
-    </ClInclude>
     <ClInclude Include="components\Test\MyForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -220,7 +217,6 @@
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="components\Calculator\Calculator.cpp" />
-    <ClCompile Include="components\Keyboard\Keyboard.cpp" />
     <ClCompile Include="components\Test\MyForm.cpp" />
     <ClCompile Include="CppCLR_WinFormsProject.cpp" />
     <ClCompile Include="pch.cpp">
@@ -247,9 +243,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="components\Calculator\Calculator.resx" />
-    <EmbeddedResource Include="components\Keyboard\Keyboard.resx">
-      <DependentUpon>components\Keyboard\Keyboard.h</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="components\Test\MyForm.resx">
       <DependentUpon>components\Test\MyForm.h</DependentUpon>
     </EmbeddedResource>

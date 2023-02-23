@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#include "lib/styles.h"
-
 namespace Calculator
 {
     using namespace System;
@@ -14,7 +12,7 @@ namespace Calculator
   public
     ref class Keyboard : public System::Windows::Forms::UserControl
     {
-      public:/*
+      public:
         enum class Key {
             ZERO = '0',
             ONE = '1',
@@ -42,7 +40,7 @@ namespace Calculator
             KeyPressedEventArgs(const Key key) : key(key)
             {
             }
-        };*/
+        };
 
       public:
         Keyboard(void)
@@ -381,12 +379,8 @@ namespace Calculator
 #pragma endregion
 
       public:
-        //System::EventHandler<KeyPressedEventArgs ^> ^ KeyPressed;
+        System::EventHandler<KeyPressedEventArgs ^> ^ KeyPressed;
 
       private:
-        /*template <Key K> System::Void button_Click(System::Object ^, System::EventArgs ^)
-        {
-            KeyPressed(this, gcnew KeyPressedEventArgs(K));
-        }*/
     };
 } // namespace Calculator

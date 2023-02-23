@@ -1,7 +1,6 @@
 ﻿
 #pragma once
 
-#include <src/styles.h>
 #include <iostream>
 
 namespace Calculator
@@ -35,6 +34,9 @@ namespace Calculator
         System::Windows::Forms::TableLayoutPanel ^ tableLayoutPanel1;
         System::Windows::Forms::TextBox ^ textBox1;
 
+      private:
+        Calculator::Keyboard ^ keyboard1;
+
         System::ComponentModel::Container ^ components;
 
 #pragma region Windows Form Designer generated code
@@ -42,6 +44,7 @@ namespace Calculator
         {
             this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
             this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+            this->keyboard1 = (gcnew ::Calculator::Keyboard());
             this->tableLayoutPanel1->SuspendLayout();
             this->SuspendLayout();
             //
@@ -52,6 +55,7 @@ namespace Calculator
                 (gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 50))
             );
             this->tableLayoutPanel1->Controls->Add(this->textBox1, 0, 0);
+            this->tableLayoutPanel1->Controls->Add(this->keyboard1, 0, 1);
             this->tableLayoutPanel1->Dock = System::Windows::Forms::DockStyle::Fill;
             this->tableLayoutPanel1->Location = System::Drawing::Point(16, 16);
             this->tableLayoutPanel1->Name = L"tableLayoutPanel1";
@@ -68,6 +72,7 @@ namespace Calculator
             // textBox1
             //
             this->textBox1->Dock = System::Windows::Forms::DockStyle::Fill;
+            this->textBox1->Font = (gcnew System::Drawing::Font(L"Courier New", 32));
             this->textBox1->Location = System::Drawing::Point(0, 0);
             this->textBox1->Margin = System::Windows::Forms::Padding(0, 0, 0, 16);
             this->textBox1->Multiline = true;
@@ -75,6 +80,16 @@ namespace Calculator
             this->textBox1->ReadOnly = true;
             this->textBox1->Size = System::Drawing::Size(488, 126);
             this->textBox1->TabIndex = 0;
+            this->textBox1->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
+            //
+            // keyboard1
+            //
+            this->keyboard1->Dock = System::Windows::Forms::DockStyle::Fill;
+            this->keyboard1->Location = System::Drawing::Point(3, 145);
+            this->keyboard1->Name = L"keyboard1";
+            this->keyboard1->Size = System::Drawing::Size(482, 420);
+            this->keyboard1->TabIndex = 1;
+            this->keyboard1->KeyPressed += gcnew System::EventHandler<Keyboard::KeyPressedEventArgs ^>(this, &Calculator::Keyboard_KeyPress);
             //
             // Calculator
             //
@@ -101,6 +116,10 @@ namespace Calculator
         }
 
         System::Void tableLayoutPanel2_Paint(System::Object ^ sender, System::Windows::Forms::PaintEventArgs ^ e)
+        {
+        }
+
+        System::Void Keyboard_KeyPress(System::Object ^, Keyboard::KeyPressedEventArgs ^ e) 
         {
         }
     };
