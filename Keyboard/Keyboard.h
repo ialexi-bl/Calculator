@@ -83,8 +83,6 @@ namespace Calculator
         System::Windows::Forms::Button ^ button_paren_open;
 
       private:
-
-
       private:
         System::Windows::Forms::Button ^ button_0;
 
@@ -473,7 +471,9 @@ namespace Calculator
       private:
         System::Void handleKeyPress(Key key)
         {
-            KeyPressed(this, gcnew KeyPressedEventArgs(key));
+            if (KeyPressed) {
+                KeyPressed(this, gcnew KeyPressedEventArgs(key));
+            }
         }
 
         System::Void button_plus_Click(System::Object ^ sender, System::EventArgs ^ e)

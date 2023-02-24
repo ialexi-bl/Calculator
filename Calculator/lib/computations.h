@@ -44,22 +44,22 @@ namespace Calculator
         namespace BinaryOperation
         {
             enum class Type;
-            class Nodeb;
+            class Node;
 
             static int getPriority(Type);
         }; // namespace BinaryOperation
         namespace UnaryOperation
         {
             enum class Type;
-            class Nodeu;
+            class Node;
         }; // namespace UnaryOperation
         namespace Literal
         {
-            class Nodel;
+            class Node;
         };
         namespace Parentheses
         {
-            class Nodep;
+            class Node;
         };
 
         class Node
@@ -76,10 +76,10 @@ namespace Calculator
 
           private:
             union {
-                ::Calculator::Parser::BinaryOperation::Nodeb *binaryOperation;
-                ::Calculator::Parser::UnaryOperation::Nodeu *unaryOperation;
-                ::Calculator::Parser::Literal::Nodel *literal;
-                ::Calculator::Parser::Parentheses::Nodep *parentheses;
+                BinaryOperation::Node *binaryOperation;
+                UnaryOperation::Node *unaryOperation;
+                Literal::Node *literal;
+                Parentheses::Node *parentheses;
             };
 
           private:
@@ -109,12 +109,12 @@ namespace Calculator
             MULTIPLY = 2,
             DIVIDE = 3,
         };
-        class BinaryOperation::Nodeb
+        class BinaryOperation::Node
         {
           public:
             Type type;
-            ::Calculator::Parser::Node left;
-            ::Calculator::Parser::Node right;
+            Parser::Node left;
+            Parser::Node right;
 
             long double evaluate() const noexcept;
         };
@@ -122,24 +122,24 @@ namespace Calculator
         enum class UnaryOperation::Type {
             MINUS = 0,
         };
-        class UnaryOperation::Nodeu
+        class UnaryOperation::Node
         {
           public:
             Type type;
-            ::Calculator::Parser::Node operand;
+            Parser::Node operand;
 
             long double evaluate() const noexcept;
         };
 
-        class Parentheses::Nodep
+        class Parentheses::Node
         {
           public:
-            ::Calculator::Parser::Node expression;
+            Parser::Node expression;
 
             long double evaluate() const noexcept;
         };
 
-        class Literal::Nodel
+        class Literal::Node
         {
           public:
             long double value;

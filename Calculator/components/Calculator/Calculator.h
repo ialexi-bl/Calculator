@@ -91,6 +91,8 @@ namespace Calculator
             this->keyboard1->Size = System::Drawing::Size(482, 420);
             this->keyboard1->TabIndex = 1;
             this->keyboard1->Load += gcnew System::EventHandler(this, &Calculator::keyboard1_Load);
+            this->keyboard1->KeyPressed +=
+                gcnew System::EventHandler<Keyboard::KeyPressedEventArgs ^>(this, &Calculator::Keyboard_KeyPress);
             //
             // Calculator
             //
@@ -120,12 +122,6 @@ namespace Calculator
 
         System::Void Form1_Load(System::Object ^ sender, System::EventArgs ^ e)
         {
-            long double out;
-            if (compute(Calculator::toStdString(L"5+2×-2"), 10, out)) {
-                this->textBox1->Text = L"Error";
-            } else {
-                this->textBox1->Text = out.ToString();
-            }
         }
 
         System::Void tableLayoutPanel1_Paint(System::Object ^ sender, System::Windows::Forms::PaintEventArgs ^ e)
@@ -146,7 +142,15 @@ namespace Calculator
             } else {
                 value += gcnew System::String(static_cast<char>(e->key), 1);
             }
-            this->textBox1->Text = value;
+
+            long double out;
+            System::String ^ result;
+            if (compute(Calculator::toStdString(value), 10, out)) {
+                result = L"Error";
+            } else {
+                result = out.ToString();
+            }
+            this->textBox1->Text = value + System::Environment::NewLine + L"=" + result;
         }
 
       private:

@@ -73,10 +73,10 @@ namespace Calculator
             case L'-':
                 out.operation = '-';
                 break;
-            case L'×':
+            case L'*':
                 out.operation = '*';
                 break;
-            case L'÷':
+            case L'/':
                 out.operation = '/';
                 break;
             default:
@@ -113,8 +113,8 @@ namespace Calculator
 
                 case L'+':
                 case L'-':
-                case L'×':
-                case L'÷':
+                case L'*':
+                case L'/':
                     if (parseOperation(i, str, token)) {
                         return 3; // Parse error
                     }
@@ -150,7 +150,7 @@ namespace Calculator
             getPointer() = node.getPointer();
 
             node.type = Node::Type::LITERAL;
-            node.literal = new Literal::Nodel {0};
+            node.literal = new Literal::Node {0};
             return *this;
         }
         Node::~Node()
@@ -175,25 +175,25 @@ namespace Calculator
         Node Node::Binary(BinaryOperation::Type type, Node &&left, Node &&right) noexcept
         {
             Node node(Type::BINARY_OPERATION);
-            node.binaryOperation = new BinaryOperation::Nodeb {type, std::move(left), std::move(right)};
+            node.binaryOperation = new BinaryOperation::Node {type, std::move(left), std::move(right)};
             return node;
         }
         Node Node::Unary(UnaryOperation::Type type, Node &&operand) noexcept
         {
             Node node(Type::UNARY_OPERATION);
-            node.unaryOperation = new UnaryOperation::Nodeu {type, std::move(operand)};
+            node.unaryOperation = new UnaryOperation::Node {type, std::move(operand)};
             return node;
         }
         Node Node::Parentheses(Node &&expression) noexcept
         {
             Node node(Type::PARENTHESES);
-            node.parentheses = new Parentheses::Nodep {std::move(expression)};
+            node.parentheses = new Parentheses::Node {std::move(expression)};
             return node;
         }
         Node Node::Literal(long double value) noexcept
         {
             Node node(Type::LITERAL);
-            node.literal = new Literal::Nodel {value};
+            node.literal = new Literal::Node {value};
             return node;
         }
         Node Node::Empty() noexcept
@@ -216,17 +216,17 @@ namespace Calculator
             return 0;
         }
 
-        long double Literal::Nodel::evaluate() const noexcept
+        long double Literal::Node::evaluate() const noexcept
         {
             return value;
         }
 
-        long double Parentheses::Nodep::evaluate() const noexcept
+        long double Parentheses::Node::evaluate() const noexcept
         {
             return expression.evaluate();
         }
 
-        long double UnaryOperation::Nodeu::evaluate() const noexcept
+        long double UnaryOperation::Node::evaluate() const noexcept
         {
             long double x = operand.evaluate();
             switch (type) {
@@ -250,7 +250,7 @@ namespace Calculator
             }
         }
 
-        long double BinaryOperation::Nodeb::evaluate() const noexcept
+        long double BinaryOperation::Node::evaluate() const noexcept
         {
             long double a = left.evaluate(), b = right.evaluate();
             switch (type) {
@@ -271,9 +271,9 @@ namespace Calculator
             using Tokenizer::Token;
 
             Node root = Node::Binary(BinaryOperation::Type::PLUS, Node::Empty(), Node::Empty());
-            Node *ptr = &root.binaryOperation->right;
+            Node *ptr = &root;
             Node *lastValue = nullptr;
-            char unaryOperation = 0;
+            char unaryOperation = 0; // TODO: support multiple operations
 
             for (size_t s = tokens.size(); i < s; i++) {
                 const Token &token = tokens[i];
@@ -308,19 +308,21 @@ namespace Calculator
                     int p1 = BinaryOperation::getPriority(ptr->binaryOperation->type);
                     int p2 = BinaryOperation::getPriority(type);
                     if (p2 >= p1) {
-                        *ptr = Node::Binary(
+                        ptr->binaryOperation->right = Node::Binary(
                             type,
                             unaryOperation ? Node::Unary(UnaryOperation::Type::MINUS, std::move(*lastValue))
                                            : std::move(*lastValue),
                             Node::Empty()
                         );
                         ptr = &ptr->binaryOperation->right;
+                        unaryOperation = 0;
 
                         delete lastValue;
                         lastValue = nullptr;
                     } else {
-                        *ptr = unaryOperation ? Node::Unary(UnaryOperation::Type::MINUS, std::move(*lastValue))
-                                              : std::move(*lastValue);
+                        ptr->binaryOperation->right = unaryOperation
+                                                          ? Node::Unary(UnaryOperation::Type::MINUS, std::move(*lastValue))
+                                                          : std::move(*lastValue);
 
                         root.binaryOperation->right = Node::Binary(type, std::move(root.binaryOperation->right), Node::Empty());
                         ptr = &root.binaryOperation->right;
@@ -352,7 +354,10 @@ namespace Calculator
                 }
 
                 if (token.type == Token::Type::OPEN_PARENTHESIS) {
-                    lastValue = new Node(Node::Type::PARENTHESES);
+                    lastValue = new Node;
+                    *lastValue = Node::Parentheses(Node::Empty());
+
+                    ++i;
                     parseExpression(i, tokens, base, lastValue->parentheses->expression);
                     continue;
                 }
@@ -363,7 +368,9 @@ namespace Calculator
             }
 
             if (lastValue) {
-                *ptr = unaryOperation ? Node::Unary(UnaryOperation::Type::MINUS, std::move(*lastValue)) : std::move(*lastValue);
+                ptr->binaryOperation->right =
+                    unaryOperation ? Node::Unary(UnaryOperation::Type::MINUS, std::move(*lastValue)) : std::move(*lastValue);
+                unaryOperation = 0;
                 delete lastValue;
                 lastValue = nullptr;
             }
