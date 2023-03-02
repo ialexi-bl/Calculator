@@ -21,7 +21,7 @@ namespace Calculator
             FOUR = '4',
             FIVE = '5',
             SIX = '6',
-            MINUS = '0',
+            MINUS = '-',
             PLUS = '+',
             MULTIPLY = '*',
             DIVIDE = '/',

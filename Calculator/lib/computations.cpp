@@ -22,7 +22,7 @@ namespace Calculator
             return result;
         }
 
-        static int parseNumber(size_t &i, const std::wstring &str, Token &out)
+        static int getNumberToken(size_t &i, const std::wstring &str, Token &out)
         {
             bool hasPoint = false;
             std::vector<char> whole, decimal;
@@ -63,7 +63,7 @@ namespace Calculator
             return 0;
         }
 
-        static int parseOperation(size_t &i, const std::wstring &str, Token &out)
+        static int getOperationToken(size_t &i, const std::wstring &str, Token &out)
         {
             out.type = Token::Type::OPERATION;
             switch (str[i]) {
@@ -106,7 +106,7 @@ namespace Calculator
                 case L'8':
                 case L'9':
                 case L'.':
-                    if (parseNumber(i, str, token)) {
+                    if (getNumberToken(i, str, token)) {
                         return 3; // Parse error
                     }
                     break;
@@ -115,7 +115,7 @@ namespace Calculator
                 case L'-':
                 case L'*':
                 case L'/':
-                    if (parseOperation(i, str, token)) {
+                    if (getOperationToken(i, str, token)) {
                         return 3; // Parse error
                     }
                     break;

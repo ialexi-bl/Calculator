@@ -2,7 +2,7 @@
 #pragma once
 
 #include <string>
-#include <lib\computations.h>
+#include <lib\math-parser.h>
 
 namespace Calculator
 {
@@ -145,7 +145,7 @@ namespace Calculator
 
             long double out;
             System::String ^ result;
-            if (compute(Calculator::toStdString(value), 10, out)) {
+            if (Math::compute(Calculator::toStdString(value), 10, out)) {
                 result = L"Error";
             } else {
                 result = out.ToString();
