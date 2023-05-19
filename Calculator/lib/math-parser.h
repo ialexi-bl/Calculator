@@ -51,8 +51,6 @@ namespace Calculator
 
                 virtual ~BinaryOperation();
                 BinaryOperation(Type type, std::unique_ptr<Node> &&left, std::unique_ptr<Node> &&right);
-                //BinaryOperation(BinaryOperation &&);
-                //BinaryOperation &operator=(BinaryOperation &&);
             };
 
             struct UnaryOperation : public Node {

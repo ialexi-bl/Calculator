@@ -5,6 +5,8 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Calculator", "Calculator\Calculator.vcxproj", "{7044856C-84F4-4E2D-B190-D3127BB1F4C6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Keyboard", "Keyboard\Keyboard.vcxproj", "{242EAFF0-45D2-46E0-9686-FAFF435B829E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -27,6 +29,18 @@ Global
 		{7044856C-84F4-4E2D-B190-D3127BB1F4C6}.Release|x64.Build.0 = Release|x64
 		{7044856C-84F4-4E2D-B190-D3127BB1F4C6}.Release|x86.ActiveCfg = Release|Win32
 		{7044856C-84F4-4E2D-B190-D3127BB1F4C6}.Release|x86.Build.0 = Release|Win32
+		{242EAFF0-45D2-46E0-9686-FAFF435B829E}.Debug|ARM.ActiveCfg = Debug|x64
+		{242EAFF0-45D2-46E0-9686-FAFF435B829E}.Debug|ARM.Build.0 = Debug|x64
+		{242EAFF0-45D2-46E0-9686-FAFF435B829E}.Debug|x64.ActiveCfg = Debug|x64
+		{242EAFF0-45D2-46E0-9686-FAFF435B829E}.Debug|x64.Build.0 = Debug|x64
+		{242EAFF0-45D2-46E0-9686-FAFF435B829E}.Debug|x86.ActiveCfg = Debug|Win32
+		{242EAFF0-45D2-46E0-9686-FAFF435B829E}.Debug|x86.Build.0 = Debug|Win32
+		{242EAFF0-45D2-46E0-9686-FAFF435B829E}.Release|ARM.ActiveCfg = Release|x64
+		{242EAFF0-45D2-46E0-9686-FAFF435B829E}.Release|ARM.Build.0 = Release|x64
+		{242EAFF0-45D2-46E0-9686-FAFF435B829E}.Release|x64.ActiveCfg = Release|x64
+		{242EAFF0-45D2-46E0-9686-FAFF435B829E}.Release|x64.Build.0 = Release|x64
+		{242EAFF0-45D2-46E0-9686-FAFF435B829E}.Release|x86.ActiveCfg = Release|Win32
+		{242EAFF0-45D2-46E0-9686-FAFF435B829E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

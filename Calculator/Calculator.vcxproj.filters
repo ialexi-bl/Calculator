@@ -38,6 +38,9 @@
     <ClInclude Include="lib\math-parser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="lib\formatting.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CppCLR_WinFormsProject.cpp">
@@ -59,6 +62,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="lib\math-parser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\formatting.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

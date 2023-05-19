@@ -26,10 +26,11 @@ namespace Calculator
             MULTIPLY = '*',
             DIVIDE = '/',
             CLEAR = 'c',
-            COMPUTE = '=',
+            CLEAR_EVERYTHING = 'e',
             PAREN_OPEN = '(',
             PAREN_CLOSE = ')',
             POINT = ',',
+            COMPUTE = '='
         };
 
         ref class KeyPressedEventArgs : public EventArgs
@@ -75,9 +76,9 @@ namespace Calculator
         System::Windows::Forms::Button ^ button_4;
         System::Windows::Forms::Button ^ button_5;
         System::Windows::Forms::Button ^ button_6;
-        System::Windows::Forms::Button ^ button_clear;
+
         System::Windows::Forms::Button ^ button_point;
-        System::Windows::Forms::Button ^ button_compute;
+
 
       private:
         System::Windows::Forms::Button ^ button_paren_open;
@@ -86,12 +87,31 @@ namespace Calculator
       private:
         System::Windows::Forms::Button ^ button_0;
 
+      private:
+        System::Windows::Forms::TableLayoutPanel ^ tableLayoutPanel1;
+
+      private:
+        System::Windows::Forms::Button ^ button_clear;
+
+      private:
+        System::Windows::Forms::Button ^ button_clear_everything;
+
+      private:
+        System::Windows::Forms::Button ^ button_compute;
+
+      private:
+
+
+      private:
+
+
         System::ComponentModel::Container ^ components;
 
 #pragma region Windows Form Designer generated code
         void InitializeComponent(void)
         {
             this->tableLayoutPanel2 = (gcnew System::Windows::Forms::TableLayoutPanel());
+            this->button_compute = (gcnew System::Windows::Forms::Button());
             this->button_plus = (gcnew System::Windows::Forms::Button());
             this->button_minus = (gcnew System::Windows::Forms::Button());
             this->button_multiply = (gcnew System::Windows::Forms::Button());
@@ -103,12 +123,14 @@ namespace Calculator
             this->button_4 = (gcnew System::Windows::Forms::Button());
             this->button_5 = (gcnew System::Windows::Forms::Button());
             this->button_6 = (gcnew System::Windows::Forms::Button());
-            this->button_clear = (gcnew System::Windows::Forms::Button());
             this->button_paren_open = (gcnew System::Windows::Forms::Button());
             this->button_0 = (gcnew System::Windows::Forms::Button());
             this->button_point = (gcnew System::Windows::Forms::Button());
-            this->button_compute = (gcnew System::Windows::Forms::Button());
+            this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
+            this->button_clear_everything = (gcnew System::Windows::Forms::Button());
+            this->button_clear = (gcnew System::Windows::Forms::Button());
             this->tableLayoutPanel2->SuspendLayout();
+            this->tableLayoutPanel1->SuspendLayout();
             this->SuspendLayout();
             //
             // tableLayoutPanel2
@@ -126,6 +148,7 @@ namespace Calculator
             this->tableLayoutPanel2->ColumnStyles->Add(
                 (gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 25))
             );
+            this->tableLayoutPanel2->Controls->Add(this->button_compute, 3, 3);
             this->tableLayoutPanel2->Controls->Add(this->button_plus, 3, 2);
             this->tableLayoutPanel2->Controls->Add(this->button_minus, 3, 1);
             this->tableLayoutPanel2->Controls->Add(this->button_multiply, 2, 0);
@@ -137,11 +160,10 @@ namespace Calculator
             this->tableLayoutPanel2->Controls->Add(this->button_4, 0, 2);
             this->tableLayoutPanel2->Controls->Add(this->button_5, 1, 2);
             this->tableLayoutPanel2->Controls->Add(this->button_6, 2, 2);
-            this->tableLayoutPanel2->Controls->Add(this->button_clear, 0, 3);
             this->tableLayoutPanel2->Controls->Add(this->button_paren_open, 0, 0);
             this->tableLayoutPanel2->Controls->Add(this->button_0, 1, 3);
             this->tableLayoutPanel2->Controls->Add(this->button_point, 2, 3);
-            this->tableLayoutPanel2->Controls->Add(this->button_compute, 3, 3);
+            this->tableLayoutPanel2->Controls->Add(this->tableLayoutPanel1, 0, 3);
             this->tableLayoutPanel2->Dock = System::Windows::Forms::DockStyle::Fill;
             this->tableLayoutPanel2->Location = System::Drawing::Point(0, 0);
             this->tableLayoutPanel2->Margin = System::Windows::Forms::Padding(0);
@@ -164,6 +186,24 @@ namespace Calculator
             );
             this->tableLayoutPanel2->Size = System::Drawing::Size(630, 559);
             this->tableLayoutPanel2->TabIndex = 2;
+            //
+            // button_compute
+            //
+            this->button_compute->Dock = System::Windows::Forms::DockStyle::Fill;
+            this->button_compute->Font = (gcnew System::Drawing::Font(
+                L"Courier New",
+                32,
+                System::Drawing::FontStyle::Regular,
+                System::Drawing::GraphicsUnit::Point,
+                static_cast<System::Byte>(204)
+            ));
+            this->button_compute->Location = System::Drawing::Point(474, 420);
+            this->button_compute->Name = L"button_compute";
+            this->button_compute->Size = System::Drawing::Size(153, 136);
+            this->button_compute->TabIndex = 16;
+            this->button_compute->Text = L"=";
+            this->button_compute->UseVisualStyleBackColor = true;
+            this->button_compute->Click += gcnew System::EventHandler(this, &Keyboard::button_compute_Click);
             //
             // button_plus
             //
@@ -363,24 +403,6 @@ namespace Calculator
             this->button_6->UseVisualStyleBackColor = true;
             this->button_6->Click += gcnew System::EventHandler(this, &Keyboard::button_6_Click);
             //
-            // button_clear
-            //
-            this->button_clear->Dock = System::Windows::Forms::DockStyle::Fill;
-            this->button_clear->Font = (gcnew System::Drawing::Font(
-                L"Courier New",
-                32,
-                System::Drawing::FontStyle::Regular,
-                System::Drawing::GraphicsUnit::Point,
-                static_cast<System::Byte>(204)
-            ));
-            this->button_clear->Location = System::Drawing::Point(3, 420);
-            this->button_clear->Name = L"button_clear";
-            this->button_clear->Size = System::Drawing::Size(151, 136);
-            this->button_clear->TabIndex = 11;
-            this->button_clear->Text = L"C";
-            this->button_clear->UseVisualStyleBackColor = true;
-            this->button_clear->Click += gcnew System::EventHandler(this, &Keyboard::button_clear_Click);
-            //
             // button_paren_open
             //
             this->button_paren_open->Dock = System::Windows::Forms::DockStyle::Fill;
@@ -435,23 +457,65 @@ namespace Calculator
             this->button_point->UseVisualStyleBackColor = true;
             this->button_point->Click += gcnew System::EventHandler(this, &Keyboard::button_point_Click);
             //
-            // button_compute
+            // tableLayoutPanel1
             //
-            this->button_compute->Dock = System::Windows::Forms::DockStyle::Fill;
-            this->button_compute->Font = (gcnew System::Drawing::Font(
+            this->tableLayoutPanel1->ColumnCount = 1;
+            this->tableLayoutPanel1->ColumnStyles->Add(
+                (gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 50))
+            );
+            this->tableLayoutPanel1->ColumnStyles->Add(
+                (gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 50))
+            );
+            this->tableLayoutPanel1->Controls->Add(this->button_clear_everything, 0, 1);
+            this->tableLayoutPanel1->Controls->Add(this->button_clear, 0, 0);
+            this->tableLayoutPanel1->Dock = System::Windows::Forms::DockStyle::Fill;
+            this->tableLayoutPanel1->Location = System::Drawing::Point(3, 420);
+            this->tableLayoutPanel1->Name = L"tableLayoutPanel1";
+            this->tableLayoutPanel1->RowCount = 2;
+            this->tableLayoutPanel1->RowStyles->Add(
+                (gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 50))
+            );
+            this->tableLayoutPanel1->RowStyles->Add(
+                (gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 50))
+            );
+            this->tableLayoutPanel1->Size = System::Drawing::Size(151, 136);
+            this->tableLayoutPanel1->TabIndex = 15;
+            //
+            // button_clear_everything
+            //
+            this->button_clear_everything->Dock = System::Windows::Forms::DockStyle::Fill;
+            this->button_clear_everything->Font = (gcnew System::Drawing::Font(
                 L"Courier New",
                 32,
                 System::Drawing::FontStyle::Regular,
                 System::Drawing::GraphicsUnit::Point,
                 static_cast<System::Byte>(204)
             ));
-            this->button_compute->Location = System::Drawing::Point(474, 420);
-            this->button_compute->Name = L"button_compute";
-            this->button_compute->Size = System::Drawing::Size(153, 136);
-            this->button_compute->TabIndex = 15;
-            this->button_compute->Text = L"=";
-            this->button_compute->UseVisualStyleBackColor = true;
-            this->button_compute->Click += gcnew System::EventHandler(this, &Keyboard::button_compute_Click);
+            this->button_clear_everything->Location = System::Drawing::Point(3, 71);
+            this->button_clear_everything->Name = L"button_clear_everything";
+            this->button_clear_everything->Size = System::Drawing::Size(145, 62);
+            this->button_clear_everything->TabIndex = 13;
+            this->button_clear_everything->Text = L"CE";
+            this->button_clear_everything->UseVisualStyleBackColor = true;
+            this->button_clear_everything->Click += gcnew System::EventHandler(this, &Keyboard::button1_Click);
+            //
+            // button_clear
+            //
+            this->button_clear->Dock = System::Windows::Forms::DockStyle::Fill;
+            this->button_clear->Font = (gcnew System::Drawing::Font(
+                L"Courier New",
+                32,
+                System::Drawing::FontStyle::Regular,
+                System::Drawing::GraphicsUnit::Point,
+                static_cast<System::Byte>(204)
+            ));
+            this->button_clear->Location = System::Drawing::Point(3, 3);
+            this->button_clear->Name = L"button_clear";
+            this->button_clear->Size = System::Drawing::Size(145, 62);
+            this->button_clear->TabIndex = 12;
+            this->button_clear->Text = L"C";
+            this->button_clear->UseVisualStyleBackColor = true;
+            this->button_clear->Click += gcnew System::EventHandler(this, &Keyboard::button_clear_Click_1);
             //
             // Keyboard
             //
@@ -461,6 +525,7 @@ namespace Calculator
             this->Name = L"Keyboard";
             this->Size = System::Drawing::Size(630, 559);
             this->tableLayoutPanel2->ResumeLayout(false);
+            this->tableLayoutPanel1->ResumeLayout(false);
             this->ResumeLayout(false);
         }
 #pragma endregion
@@ -476,99 +541,111 @@ namespace Calculator
             }
         }
 
-        System::Void button_plus_Click(System::Object ^ sender, System::EventArgs ^ e)
+        System::Void button_plus_Click(System::Object ^, System::EventArgs ^)
         {
             handleKeyPress(Key::PLUS);
         }
 
       private:
-        System::Void button_minus_Click(System::Object ^ sender, System::EventArgs ^ e)
+        System::Void button_minus_Click(System::Object ^, System::EventArgs ^)
         {
             handleKeyPress(Key::MINUS);
         }
 
       private:
-        System::Void button_multiply_Click(System::Object ^ sender, System::EventArgs ^ e)
+        System::Void button_multiply_Click(System::Object ^, System::EventArgs ^)
         {
             handleKeyPress(Key::MULTIPLY);
         }
 
       private:
-        System::Void button_divide_Click(System::Object ^ sender, System::EventArgs ^ e)
+        System::Void button_divide_Click(System::Object ^, System::EventArgs ^)
         {
             handleKeyPress(Key::DIVIDE);
         }
 
       private:
-        System::Void button_1_Click(System::Object ^ sender, System::EventArgs ^ e)
+        System::Void button_1_Click(System::Object ^, System::EventArgs ^)
         {
             handleKeyPress(Key::ONE);
         }
 
       private:
-        System::Void button_2_Click(System::Object ^ sender, System::EventArgs ^ e)
+        System::Void button_2_Click(System::Object ^, System::EventArgs ^)
         {
             handleKeyPress(Key::TWO);
         }
 
       private:
-        System::Void button_3_Click(System::Object ^ sender, System::EventArgs ^ e)
+        System::Void button_3_Click(System::Object ^, System::EventArgs ^)
         {
             handleKeyPress(Key::THREE);
         }
 
       private:
-        System::Void button_paren_close_Click(System::Object ^ sender, System::EventArgs ^ e)
+        System::Void button_paren_close_Click(System::Object ^, System::EventArgs ^)
         {
             handleKeyPress(Key::PAREN_CLOSE);
         }
 
       private:
-        System::Void button_4_Click(System::Object ^ sender, System::EventArgs ^ e)
+        System::Void button_4_Click(System::Object ^, System::EventArgs ^)
         {
             handleKeyPress(Key::FOUR);
         }
 
       private:
-        System::Void button_5_Click(System::Object ^ sender, System::EventArgs ^ e)
+        System::Void button_5_Click(System::Object ^, System::EventArgs ^)
         {
             handleKeyPress(Key::FIVE);
         }
 
       private:
-        System::Void button_6_Click(System::Object ^ sender, System::EventArgs ^ e)
+        System::Void button_6_Click(System::Object ^, System::EventArgs ^)
         {
             handleKeyPress(Key::SIX);
         }
 
       private:
-        System::Void button_clear_Click(System::Object ^ sender, System::EventArgs ^ e)
+        System::Void button_clear_Click(System::Object ^, System::EventArgs ^)
         {
             handleKeyPress(Key::CLEAR);
         }
 
       private:
-        System::Void button_0_Click(System::Object ^ sender, System::EventArgs ^ e)
+        System::Void button_0_Click(System::Object ^, System::EventArgs ^)
         {
             handleKeyPress(Key::ZERO);
         }
 
       private:
-        System::Void button_point_Click(System::Object ^ sender, System::EventArgs ^ e)
+        System::Void button_point_Click(System::Object ^, System::EventArgs ^)
         {
             handleKeyPress(Key::POINT);
+        }
+
+      private:
+        System::Void button_paren_open_Click(System::Object ^, System::EventArgs ^)
+        {
+            handleKeyPress(Key::PAREN_OPEN);
+        }
+
+      private:
+        System::Void button_clear_Click_1(System::Object ^ sender, System::EventArgs ^ e)
+        {
+            handleKeyPress(Key::CLEAR);
+        }
+
+      private:
+        System::Void button1_Click(System::Object ^ sender, System::EventArgs ^ e)
+        {
+            handleKeyPress(Key::CLEAR_EVERYTHING);
         }
 
       private:
         System::Void button_compute_Click(System::Object ^ sender, System::EventArgs ^ e)
         {
             handleKeyPress(Key::COMPUTE);
-        }
-
-      private:
-        System::Void button_paren_open_Click(System::Object ^ sender, System::EventArgs ^ e)
-        {
-            handleKeyPress(Key::PAREN_OPEN);
         }
     };
 } // namespace Calculator

@@ -2,7 +2,9 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include <lib\math-parser.h>
+#include <lib\formatting.hpp>
 
 namespace Calculator
 {
@@ -67,7 +69,7 @@ namespace Calculator
             this->tableLayoutPanel1->RowStyles->Add(
                 (gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 75))
             );
-            this->tableLayoutPanel1->Size = System::Drawing::Size(488, 568);
+            this->tableLayoutPanel1->Size = System::Drawing::Size(488, 648);
             this->tableLayoutPanel1->TabIndex = 0;
             //
             // textBox1
@@ -98,11 +100,11 @@ namespace Calculator
             //
             this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
             this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-            this->ClientSize = System::Drawing::Size(520, 600);
+            this->ClientSize = System::Drawing::Size(520, 648);
             this->Controls->Add(this->tableLayoutPanel1);
             this->Name = L"Calculator";
             this->Padding = System::Windows::Forms::Padding(16);
-            this->Text = L"Form1";
+            this->Text = L"Calculator";
             this->Load += gcnew System::EventHandler(this, &Calculator::Form1_Load);
             this->tableLayoutPanel1->ResumeLayout(false);
             this->tableLayoutPanel1->PerformLayout();
@@ -120,41 +122,69 @@ namespace Calculator
             return result;
         }
 
-        System::Void Form1_Load(System::Object ^ sender, System::EventArgs ^ e)
+        System::Void Form1_Load(System::Object ^, System::EventArgs ^)
         {
         }
 
-        System::Void tableLayoutPanel1_Paint(System::Object ^ sender, System::Windows::Forms::PaintEventArgs ^ e)
+        System::Void tableLayoutPanel1_Paint(System::Object ^, System::Windows::Forms::PaintEventArgs ^)
         {
         }
 
-        System::Void tableLayoutPanel2_Paint(System::Object ^ sender, System::Windows::Forms::PaintEventArgs ^ e)
+        System::Void tableLayoutPanel2_Paint(System::Object ^, System::Windows::Forms::PaintEventArgs ^)
         {
         }
 
       private:
         System::String ^ value = L"";
 
-        System::Void Keyboard_KeyPress(System::Object ^, Keyboard::KeyPressedEventArgs ^ e)
+        int ComputeValue(System::String ^ next_value, System::String ^ &result)
         {
-            if (e->key == Keyboard::Key::CLEAR) {
-                value = value->Substring(0, value->Length - 1);
-            } else {
-                value += gcnew System::String(static_cast<char>(e->key), 1);
+            long double out;
+            int code = 0;
+
+            switch (Math::compute(Calculator::toStdString(next_value), 7, out)) {
+            case 0:
+                result = gcnew System::String(Formatting::toBase(out, 7).c_str());
+                break;
+            case 10:
+                code = 1;
+                [[fallthrough]];
+            default:
+                result = L"Error";
             }
 
-            long double out;
+            return code;
+        }
+
+        System::Void Keyboard_KeyPress(System::Object ^, Keyboard::KeyPressedEventArgs ^ e)
+        {
             System::String ^ result;
-            if (Math::compute(Calculator::toStdString(value), 10, out)) {
-                result = L"Error";
+
+            if (e->key == Keyboard::Key::CLEAR) {
+                if (value->Length > 0) {
+                    value = value->Substring(0, value->Length - 1);
+                }
+                ComputeValue(value, result);
+            } else if (e->key == Keyboard::Key::CLEAR_EVERYTHING) {
+                value = gcnew System::String(L"");
+                ComputeValue(value, result);
+            } else if (e->key == Keyboard::Key::COMPUTE) {
+                ComputeValue(value, result);
+                value = result;
             } else {
-                result = out.ToString();
+                System::String ^ next_value = value + static_cast<wchar_t>(e->key);
+
+                if (ComputeValue(next_value, result)) {
+                    return;
+                }
+                value = next_value;
             }
+
             this->textBox1->Text = value + System::Environment::NewLine + L"=" + result;
         }
 
       private:
-        System::Void keyboard1_Load(System::Object ^ sender, System::EventArgs ^ e)
+        System::Void keyboard1_Load(System::Object ^, System::EventArgs ^)
         {
         }
     };

@@ -217,6 +217,7 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="lib\computations.h" />
+    <ClInclude Include="lib\formatting.hpp" />
     <ClInclude Include="lib\math-parser.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
@@ -227,6 +228,7 @@
     <ClCompile Include="components\Test\MyForm.cpp" />
     <ClCompile Include="CppCLR_WinFormsProject.cpp" />
     <ClCompile Include="lib\computations.cpp" />
+    <ClCompile Include="lib\formatting.cpp" />
     <ClCompile Include="lib\math-parser.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

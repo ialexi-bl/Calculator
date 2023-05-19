@@ -34,7 +34,7 @@ namespace Calculator
                     }
 
                     size_t j;
-                    bool hasNumber = false;
+                    bool has_number = false;
                     for (j = i; j < s; j++) {
                         switch (str[j]) {
                         case L'0':
@@ -48,15 +48,15 @@ namespace Calculator
                         case L'8':
                         case L'9':
                         case L',':
-                            hasNumber = true;
+                            has_number = true;
                             break;
                         default:
                             goto end_number;
                         }
                     }
-                end_number:
+                end_number:;
 
-                    if (hasNumber) {
+                    if (has_number) {
                         out.push_back({Token::Type::NUMBER, i, j});
                         i = j - 1;
                     } else {
@@ -94,52 +94,6 @@ namespace Calculator
             Literal::Literal(value_t value) : value {value}
             {
             }
-            /*Node::Node() : type {Type::EMPTY}, operands {nullptr}
-            {
-            }
-            Node::Node(size_t operands_count) : type {Type::EMPTY}, operands {new std::unique_ptr<Node>[operands_count]}
-            {
-            }
-            Node::~Node()
-            {
-                delete[] operands;
-            }
-            Node Node::BinaryOperation(BinaryOperation::Type type, std::unique_ptr<Node> &&left, std::unique_ptr<Node> &&right)
-            {
-                Node result(2);
-                result.type = Type::BINARY_OPERATION;
-                result.operands[0] = std::move(left);
-                result.operands[1] = std::move(right);
-                return result;
-            }
-            Node Node::UnaryOperation(UnaryOperation::Type type, std::unique_ptr<Node> &&operand)
-            {
-                Node result(1);
-                result.type = Type::UNARY_OPERATION;
-                result.operands[0] = std::move(operand);
-            }
-            Node Node::Literal(value_t value)
-            {
-                Node result;
-                result.value = value;
-                return result;
-            }*/
-
-            /*BinaryOperation::BinaryOperation(Type type, std::unique_ptr<Node> &&left, std::unique_ptr<Node> &&right)
-                : type {type}, left {std::move(left)}, right {std::move(right)}
-            {
-            }
-            BinaryOperation::BinaryOperation(BinaryOperation &&operation)
-                : type {operation.type}, left {std::move(operation.left)}, right {std::move(operation.right)}
-            {
-            }
-            BinaryOperation &BinaryOperation::operator=(BinaryOperation &&operation)
-            {
-                type = operation.type;
-                left = std::move(operation.left);
-                right = std::move(operation.right);
-                return *this;
-            }*/
 
             int BinaryOperation::getPriority(Type type)
             {
@@ -155,65 +109,136 @@ namespace Calculator
                 }
             }
 
+            static int parseBinaryOperation(
+                BinaryOperation::Type type,
+                int &last_priority,
+                std::unique_ptr<Node> &root,
+                std::unique_ptr<Node> *&ptr,
+                std::unique_ptr<Node> &&last_value_root
+            )
+            {
+                int p1 = last_priority;
+                int p2 = BinaryOperation::getPriority(type);
+
+                if (p2 > p1) {
+                    BinaryOperation *operation = new BinaryOperation {type, std::move(last_value_root), nullptr};
+                    *ptr = std::unique_ptr<Node>(operation);
+                    ptr = &operation->right;
+                } else {
+                    *ptr = std::move(last_value_root);
+
+                    BinaryOperation *operation = new BinaryOperation {type, std::move(root), nullptr};
+                    root = std::unique_ptr<Node>(operation);
+                    ptr = &operation->right;
+                }
+
+                return p2;
+            }
+
             static int parseExpression(
                 const std::wstring &str,
                 const std::vector<Tokens::Token> &tokens,
                 unsigned int base,
                 size_t &i,
-                std::unique_ptr<Node> &result
+                std::unique_ptr<Node> &result,
+                bool is_nested = false
             )
             {
                 using Tokens::Token;
 
                 std::unique_ptr<Node> root = nullptr;
                 std::unique_ptr<Node> *ptr = &root;
-                int lastPriority = -1;
+                int last_priority = -1;
 
-                bool isValidLastValue = false;
-                std::unique_ptr<Node> lastValueRoot = nullptr;
-                std::unique_ptr<Node> *lastValue = &lastValueRoot;
+                bool is_valid_last_value = false;
+                std::unique_ptr<Node> last_value_root = nullptr;
+                std::unique_ptr<Node> *last_value = &last_value_root;
 
                 for (size_t s = tokens.size(); i < s; i++) {
                     const Token &token = tokens[i];
 
                     if (token.type == Token::Type::NUMBER) {
-                        bool hadPoint = false;
+                        // Example string when this branch is possible: "5)2"
+                        if (is_valid_last_value) {
+                            last_priority = parseBinaryOperation(
+                                BinaryOperation::Type::MULTIPLICATION,
+                                last_priority,
+                                root,
+                                ptr,
+                                std::move(last_value_root)
+                            );
+
+                            last_value_root = nullptr;
+                            last_value = &last_value_root;
+                            is_valid_last_value = false;
+                        }
+
+                        bool had_point = false;
+                        short whole_length = 0, decimal_length = 0;
                         long double whole = 0, decimal = 0;
 
                         for (size_t j = token.start; j < token.end; j++) {
                             if (str[j] == L',') {
-                                hadPoint = true;
+                                had_point = true;
                                 continue;
                             }
-                            if (!hadPoint) {
+                            if (!had_point) {
                                 whole *= base;
                                 whole += str[j] - L'0';
+                                ++whole_length;
                             } else {
                                 decimal *= base;
                                 decimal += str[j] - L'0';
+                                ++decimal_length;
                             }
+                        }
+                        if (whole_length > 9 || decimal_length > 9) {
+                            return 10; // Overflow
                         }
                         while (decimal >= 1) {
                             decimal /= base;
                         }
 
-                        *lastValue = std::make_unique<Literal>(whole + decimal);
-                        isValidLastValue = true;
+                        *last_value = std::make_unique<Literal>(whole + decimal);
+                        is_valid_last_value = true;
                         continue;
                     }
 
                     if (token.type == Token::Type::PARENTHESIS_OPEN) {
-                        *lastValue = std::make_unique<Node>();
+                        // Example string when this branch is possible: "5)2"
+                        if (is_valid_last_value) {
+                            last_priority = parseBinaryOperation(
+                                BinaryOperation::Type::MULTIPLICATION,
+                                last_priority,
+                                root,
+                                ptr,
+                                std::move(last_value_root)
+                            );
+
+                            last_value_root = nullptr;
+                            last_value = &last_value_root;
+                            is_valid_last_value = false;
+                        }
+
+                        *last_value = std::make_unique<Node>();
 
                         ++i;
-                        parseExpression(str, tokens, base, i, *lastValue);
+                        parseExpression(str, tokens, base, i, *last_value, true);
 
-                        isValidLastValue = true;
+                        is_valid_last_value = true;
                         continue;
                     }
 
                     if (token.type == Token::Type::PARENTHESIS_CLOSE) {
-                        break;
+                        if (is_nested) {
+                            break;
+                        } else {
+                            *ptr = std::move(last_value_root);
+                            last_value_root = std::move(root);
+                            last_value = &last_value_root;
+                            is_valid_last_value = true;
+                            ptr = &root;
+                        }
                     }
 
                     if (token.type == Token::Type::OPERATION) {
@@ -221,14 +246,14 @@ namespace Calculator
                             return 1;
                         }
 
-                        if (!isValidLastValue) {
+                        if (!is_valid_last_value) {
                             if (str[token.start] != '-') {
                                 return 1;
                             }
 
                             UnaryOperation *operation = new UnaryOperation {UnaryOperation::Type::MINUS, nullptr};
-                            *lastValue = std::unique_ptr<Node>(operation);
-                            lastValue = &operation->operand;
+                            *last_value = std::unique_ptr<Node>(operation);
+                            last_value = &operation->operand;
                             continue;
                         }
 
@@ -250,33 +275,19 @@ namespace Calculator
                             return 1;
                         }
 
-                        int p1 = lastPriority;
-                        int p2 = BinaryOperation::getPriority(type);
+                        last_priority = parseBinaryOperation(type, last_priority, root, ptr, std::move(last_value_root));
 
-                        if (p2 > p1) {
-                            BinaryOperation *operation = new BinaryOperation {type, std::move(lastValueRoot), nullptr};
-                            *ptr = std::unique_ptr<Node>(operation);
-                            ptr = &operation->right;
-                        } else {
-                            *ptr = std::move(lastValueRoot);
-
-                            BinaryOperation *operation = new BinaryOperation {type, std::move(root), nullptr};
-                            root = std::unique_ptr<Node>(operation);
-                            ptr = &operation->right;
-                        }
-
-                        lastValueRoot = nullptr;
-                        lastValue = &lastValueRoot;
-                        lastPriority = p2;
-
+                        last_value_root = nullptr;
+                        last_value = &last_value_root;
+                        is_valid_last_value = false;
                         continue;
                     }
                 }
 
-                if (lastValue) {
-                    *ptr = std::move(lastValueRoot);
-                    lastValueRoot = nullptr;
-                    lastValue = &lastValueRoot;
+                if (last_value) {
+                    *ptr = std::move(last_value_root);
+                    last_value_root = nullptr;
+                    last_value = &last_value_root;
                 }
 
                 result = std::move(root);
@@ -306,27 +317,27 @@ namespace Calculator
             if (auto *literal = dynamic_cast<const Literal *>(&node)) {
                 return literal->value;
             }
-            if (auto *unaryOperation = dynamic_cast<const UnaryOperation *>(&node)) {
-                long double operandValue = evaluate(*unaryOperation->operand);
+            if (auto *unary_operation = dynamic_cast<const UnaryOperation *>(&node)) {
+                long double operand_value = evaluate(*unary_operation->operand);
 
-                switch (unaryOperation->type) {
+                switch (unary_operation->type) {
                 case UnaryOperation::Type::MINUS:
-                    return -operandValue;
+                    return -operand_value;
                 }
-                return operandValue;
+                return operand_value;
             }
-            if (auto *binaryOperation = dynamic_cast<const BinaryOperation *>(&node)) {
-                long double left = evaluate(*binaryOperation->left);
-                long double right = evaluate(*binaryOperation->right);
-
-                if (binaryOperation->left == nullptr) {
-                    return right;
+            if (auto *binary_operation = dynamic_cast<const BinaryOperation *>(&node)) {
+                if (binary_operation->left == nullptr) {
+                    return evaluate(*binary_operation->right);
                 }
-                if (binaryOperation->right == nullptr) {
-                    return left;
+                if (binary_operation->right == nullptr) {
+                    return evaluate(*binary_operation->left);
                 }
 
-                switch (binaryOperation->type) {
+                long double left = evaluate(*binary_operation->left);
+                long double right = evaluate(*binary_operation->right);
+
+                switch (binary_operation->type) {
                 case BinaryOperation::Type::ADDITION:
                     return left + right;
                 case BinaryOperation::Type::SUBTRACTION:
@@ -346,7 +357,6 @@ namespace Calculator
         {
             std::unique_ptr<Parser::Node> node = nullptr;
             if (Parser::parse(str, base, node)) {
-
                 return 1;
             }
 
