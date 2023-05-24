@@ -227,7 +227,6 @@
     <ClCompile Include="components\Calculator\Calculator.cpp" />
     <ClCompile Include="components\Test\MyForm.cpp" />
     <ClCompile Include="CppCLR_WinFormsProject.cpp" />
-    <ClCompile Include="lib\computations.cpp" />
     <ClCompile Include="lib\formatting.cpp" />
     <ClCompile Include="lib\math-parser.cpp" />
     <ClCompile Include="pch.cpp">

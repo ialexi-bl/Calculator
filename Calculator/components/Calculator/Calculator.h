@@ -84,6 +84,8 @@ namespace Calculator
             this->textBox1->Size = System::Drawing::Size(488, 126);
             this->textBox1->TabIndex = 0;
             this->textBox1->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
+            this->textBox1->KeyPress += gcnew KeyPressEventHandler(this, &Calculator::Form_KeyPress);
+            this->textBox1->KeyDown += gcnew KeyEventHandler(this, &Calculator::Form_KeyDown);
             //
             // keyboard1
             //
@@ -108,6 +110,8 @@ namespace Calculator
             this->Load += gcnew System::EventHandler(this, &Calculator::Form1_Load);
             this->tableLayoutPanel1->ResumeLayout(false);
             this->tableLayoutPanel1->PerformLayout();
+            this->KeyPress += gcnew KeyPressEventHandler(this, &Calculator::Form_KeyPress);
+            this->KeyDown += gcnew KeyEventHandler(this, &Calculator::Form_KeyDown);
             this->ResumeLayout(false);
         }
 #pragma endregion
@@ -141,14 +145,15 @@ namespace Calculator
         {
             long double out;
             int code = 0;
-
+            
             switch (Math::compute(Calculator::toStdString(next_value), 7, out)) {
             case 0:
                 result = gcnew System::String(Formatting::toBase(out, 7).c_str());
                 break;
             case 10:
+                result = L"Overflow";
                 code = 1;
-                [[fallthrough]];
+                break;
             default:
                 result = L"Error";
             }
@@ -156,23 +161,23 @@ namespace Calculator
             return code;
         }
 
-        System::Void Keyboard_KeyPress(System::Object ^, Keyboard::KeyPressedEventArgs ^ e)
+        System::Void handleKeyPress(Keyboard::Key key)
         {
             System::String ^ result;
 
-            if (e->key == Keyboard::Key::CLEAR) {
+            if (key == Keyboard::Key::CLEAR) {
                 if (value->Length > 0) {
                     value = value->Substring(0, value->Length - 1);
                 }
                 ComputeValue(value, result);
-            } else if (e->key == Keyboard::Key::CLEAR_EVERYTHING) {
+            } else if (key == Keyboard::Key::CLEAR_EVERYTHING) {
                 value = gcnew System::String(L"");
                 ComputeValue(value, result);
-            } else if (e->key == Keyboard::Key::COMPUTE) {
+            } else if (key == Keyboard::Key::COMPUTE) {
                 ComputeValue(value, result);
                 value = result;
             } else {
-                System::String ^ next_value = value + static_cast<wchar_t>(e->key);
+                System::String ^ next_value = value + static_cast<wchar_t>(key);
 
                 if (ComputeValue(next_value, result)) {
                     return;
@@ -181,6 +186,72 @@ namespace Calculator
             }
 
             this->textBox1->Text = value + System::Environment::NewLine + L"=" + result;
+        }
+
+        System::Void Keyboard_KeyPress(System::Object ^, Keyboard::KeyPressedEventArgs ^ e)
+        {
+            handleKeyPress(e->key);
+        }
+
+        System::Void Form_KeyPress(System::Object ^, KeyPressEventArgs ^ e)
+        {
+            switch (e->KeyChar) {
+            case static_cast<char>(Keys::D0):
+                handleKeyPress(Keyboard::Key::ZERO);
+                break;
+            case static_cast<char>(Keys::D1):
+                handleKeyPress(Keyboard::Key::ONE);
+                break;
+            case static_cast<char>(Keys::D2):
+                handleKeyPress(Keyboard::Key::TWO);
+                break;
+            case static_cast<char>(Keys::D3):
+                handleKeyPress(Keyboard::Key::THREE);
+                break;
+            case static_cast<char>(Keys::D4):
+                handleKeyPress(Keyboard::Key::FOUR);
+                break;
+            case static_cast<char>(Keys::D5):
+                handleKeyPress(Keyboard::Key::FIVE);
+                break;
+            case '6':
+                handleKeyPress(Keyboard::Key::SIX);
+                break;
+            case '/':
+                handleKeyPress(Keyboard::Key::DIVIDE);
+                break;
+            case '*':
+                handleKeyPress(Keyboard::Key::MULTIPLY);
+                break;
+            case '-':
+                handleKeyPress(Keyboard::Key::MINUS);
+                break;
+            case '+':
+                handleKeyPress(Keyboard::Key::PLUS);
+                break;
+            case static_cast<char>(Keys::Enter):
+            case '=':
+                handleKeyPress(Keyboard::Key::COMPUTE);
+                break;
+            case '.':
+            case ',':
+                handleKeyPress(Keyboard::Key::POINT);
+                break;
+            }
+        }
+
+        System::Void Form_KeyDown(System::Object ^, KeyEventArgs ^ e)
+        {
+            switch (e->KeyCode) {
+            case Keys::Back:
+            case Keys::Delete:
+                auto v = Control::ModifierKeys;
+                auto d = Control::ModifierKeys & Keys::Control;
+                handleKeyPress(
+                    e->Control ? Keyboard::Key::CLEAR_EVERYTHING : Keyboard::Key::CLEAR
+                );
+                break;
+            }
         }
 
       private:

@@ -58,9 +58,6 @@
     <ClCompile Include="components\Test\MyForm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="lib\computations.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="lib\math-parser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

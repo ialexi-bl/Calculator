@@ -179,6 +179,9 @@ namespace Calculator
 
                         for (size_t j = token.start; j < token.end; j++) {
                             if (str[j] == L',') {
+                                if (had_point) {
+                                    return 11; // Unexpected point
+                                }
                                 had_point = true;
                                 continue;
                             }
@@ -310,57 +313,77 @@ namespace Calculator
             }
         } // namespace Parser
 
-        static long double evaluate(const Parser::Node &node)
+        static int evaluate(const Parser::Node &node, long double &result)
         {
             using namespace Parser;
 
             if (auto *literal = dynamic_cast<const Literal *>(&node)) {
-                return literal->value;
+                result = literal->value;
+                return 0;
             }
             if (auto *unary_operation = dynamic_cast<const UnaryOperation *>(&node)) {
-                long double operand_value = evaluate(*unary_operation->operand);
+                long double operand_value;
+                if (int error = evaluate(*unary_operation->operand, operand_value)) {
+                    return error;
+                }
 
                 switch (unary_operation->type) {
                 case UnaryOperation::Type::MINUS:
-                    return -operand_value;
+                    result = -operand_value;
+                    return 0;
                 }
-                return operand_value;
+                result = operand_value;
+                return 0;
             }
             if (auto *binary_operation = dynamic_cast<const BinaryOperation *>(&node)) {
                 if (binary_operation->left == nullptr) {
-                    return evaluate(*binary_operation->right);
+                    return evaluate(*binary_operation->right, result);
                 }
                 if (binary_operation->right == nullptr) {
-                    return evaluate(*binary_operation->left);
+                    return evaluate(*binary_operation->left, result);
                 }
 
-                long double left = evaluate(*binary_operation->left);
-                long double right = evaluate(*binary_operation->right);
+                long double left, right;
+                if (int error = evaluate(*binary_operation->left, left)) {
+                    return error;
+                }
+                if (int error = evaluate(*binary_operation->right, right))
+                {
+                    return error;
+                }
 
                 switch (binary_operation->type) {
                 case BinaryOperation::Type::ADDITION:
-                    return left + right;
+                    result = left + right;
+                    return 0;
                 case BinaryOperation::Type::SUBTRACTION:
-                    return left - right;
+                    result = left - right;
+                    return 0;
                 case BinaryOperation::Type::MULTIPLICATION:
-                    return left * right;
+                    result = left * right;
+                    return 0;
                 case BinaryOperation::Type::DIVISION:
-                    return left / right;
+                    result = left / right;
+                    return 0;
                 }
-                return left * right;
+                result = left * right;
+                return 0;
             }
 
+            result = 0;
             return 0;
         }
 
         int compute(const std::wstring &str, unsigned int base, value_t &result)
         {
             std::unique_ptr<Parser::Node> node = nullptr;
-            if (Parser::parse(str, base, node)) {
-                return 1;
+            if (int error = Parser::parse(str, base, node)) {
+                return error;
             }
 
-            result = evaluate(*node);
+            if (int error = evaluate(*node, result)) {
+                return error;
+            }
             return 0;
         }
     } // namespace Math
